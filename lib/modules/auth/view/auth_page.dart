@@ -3,26 +3,38 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_example/modules/auth/bloc/auth_bloc.dart';
 
 class AuthPage extends StatelessWidget {
-  const AuthPage({super.key});
+  AuthPage({super.key});
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    debugPrint('AUTH BUILD');
+
     return BlocProvider(
       create: (context) => AuthBloc(),
       child: Scaffold(
         backgroundColor: Colors.white,
         body: BlocConsumer<AuthBloc, AuthState>(
-          listenWhen: (prev, curr) => !prev.isSuccess && curr.isSuccess || prev.errorMessage != curr.errorMessage,
+          listenWhen: (prev, curr) =>
+              !prev.isSuccess && curr.isSuccess ||
+              prev.errorMessage != curr.errorMessage,
           listener: (context, state) {
+            debugPrint('LISTENER');
             if (state.isSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login Success')));
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text('Login Success')));
               context.read<AuthBloc>().add(ResetAuth());
             } else if (state.errorMessage != null) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
             }
           },
+          buildWhen: (prev, curr) =>
+              prev.isSubmitting != curr.isSubmitting ||
+              prev.isValid != curr.isValid,
           builder: (context, state) {
+            debugPrint('BUILDER');
             return Padding(
               padding: const EdgeInsets.all(16),
               child: Form(
@@ -33,11 +45,16 @@ class AuthPage extends StatelessWidget {
                     BlocBuilder<AuthBloc, AuthState>(
                       buildWhen: (prev, curr) => prev.email != curr.email,
                       builder: (context, state) {
+                        debugPrint('EMAIL');
                         return TextFormField(
                           initialValue: state.email,
                           decoration: InputDecoration(labelText: 'Email'),
-                          onChanged: (value) => context.read<AuthBloc>().add(EmailChanged(value)),
-                          validator: (value) => value != null && value.contains('@') ? null : 'Enter a valid email',
+                          onChanged: (value) =>
+                              context.read<AuthBloc>().add(EmailChanged(value)),
+                          validator: (value) =>
+                              value != null && value.contains('@')
+                                  ? null
+                                  : 'Enter a valid email',
                         );
                       },
                     ),
@@ -45,8 +62,10 @@ class AuthPage extends StatelessWidget {
                     /// Password
                     BlocBuilder<AuthBloc, AuthState>(
                       buildWhen: (prev, curr) =>
-                          prev.password != curr.password || prev.showPassword != curr.showPassword,
+                          prev.password != curr.password ||
+                          prev.showPassword != curr.showPassword,
                       builder: (context, state) {
+                        debugPrint('PASSWORD');
                         return TextFormField(
                           initialValue: state.password,
                           obscureText: !state.showPassword,
@@ -54,14 +73,23 @@ class AuthPage extends StatelessWidget {
                               labelText: 'Password',
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  state.showPassword ? Icons.visibility : Icons.visibility_off,
+                                  state.showPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
                                 ),
                                 onPressed: () {
-                                  context.read<AuthBloc>().add(TogglePasswordVisibility());
+                                  context
+                                      .read<AuthBloc>()
+                                      .add(TogglePasswordVisibility());
                                 },
                               )),
-                          onChanged: (value) => context.read<AuthBloc>().add(PasswordChanged(value)),
-                          validator: (value) => value != null && value.length >= 6 ? null : 'Minimum 6 characters',
+                          onChanged: (value) => context
+                              .read<AuthBloc>()
+                              .add(PasswordChanged(value)),
+                          validator: (value) =>
+                              value != null && value.length >= 6
+                                  ? null
+                                  : 'Minimum 6 characters',
                         );
                       },
                     ),
@@ -70,7 +98,9 @@ class AuthPage extends StatelessWidget {
 
                     /// Submit button
                     BlocBuilder<AuthBloc, AuthState>(
-                      buildWhen: (prev, curr) => prev.isSubmitting != curr.isSubmitting || prev.isValid != curr.isValid,
+                      buildWhen: (prev, curr) =>
+                          prev.isSubmitting != curr.isSubmitting ||
+                          prev.isValid != curr.isValid,
                       builder: (context, state) {
                         return state.isSubmitting
                             ? CircularProgressIndicator()
@@ -78,7 +108,9 @@ class AuthPage extends StatelessWidget {
                                 onPressed: state.isValid
                                     ? () {
                                         if (_formKey.currentState!.validate()) {
-                                          context.read<AuthBloc>().add(LoginSubmitted());
+                                          context
+                                              .read<AuthBloc>()
+                                              .add(LoginSubmitted());
                                         }
                                       }
                                     : null,
