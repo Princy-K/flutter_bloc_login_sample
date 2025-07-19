@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_example/core/extentions/margin_extention.dart';
+import 'package:flutter_bloc_example/core/extentions/media_query_extention.dart';
+import 'package:flutter_bloc_example/core/extentions/padding_extention.dart';
+import 'package:flutter_bloc_example/core/extentions/sized_box_extention.dart';
 import 'package:flutter_bloc_example/modules/auth/bloc/auth_bloc.dart';
 
 class AuthPage extends StatelessWidget {
@@ -13,117 +17,205 @@ class AuthPage extends StatelessWidget {
 
     return BlocProvider(
       create: (context) => AuthBloc(),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: BlocConsumer<AuthBloc, AuthState>(
-          listenWhen: (prev, curr) =>
-              !prev.isSuccess && curr.isSuccess ||
-              prev.errorMessage != curr.errorMessage,
-          listener: (context, state) {
-            debugPrint('LISTENER');
-            if (state.isSuccess) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text('Login Success')));
-              context.read<AuthBloc>().add(ResetAuth());
-            } else if (state.errorMessage != null) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
-            }
-          },
-          buildWhen: (prev, curr) =>
-              prev.isSubmitting != curr.isSubmitting ||
-              prev.isValid != curr.isValid,
-          builder: (context, state) {
-            debugPrint('BUILDER');
-            return Padding(
-              padding: const EdgeInsets.all(16),
-              child: Form(
-                key: _formKey,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: BlocConsumer<AuthBloc, AuthState>(
+            listenWhen: (prev, curr) =>
+                !prev.isSuccess && curr.isSuccess ||
+                prev.errorMessage != curr.errorMessage,
+            listener: (context, state) {
+              debugPrint('LISTENER');
+              if (state.isSuccess) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text('Login Success')));
+                context.read<AuthBloc>().add(ResetAuth());
+              } else if (state.errorMessage != null) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.errorMessage!)));
+              }
+            },
+            buildWhen: (prev, curr) =>
+                prev.isSubmitting != curr.isSubmitting ||
+                prev.isValid != curr.isValid,
+            builder: (context, state) {
+              debugPrint('BUILDER');
+              return Padding(
+                padding: context.paddingAllResponsive(0.08),
                 child: Column(
                   children: [
-                    /// Email
-                    BlocBuilder<AuthBloc, AuthState>(
-                      buildWhen: (prev, curr) => prev.email != curr.email,
-                      builder: (context, state) {
-                        debugPrint('EMAIL');
-                        return TextFormField(
-                          initialValue: state.email,
-                          decoration: InputDecoration(labelText: 'Email'),
-                          onChanged: (value) =>
-                              context.read<AuthBloc>().add(EmailChanged(value)),
-                          validator: (value) =>
-                              value != null && value.contains('@')
-                                  ? null
-                                  : 'Enter a valid email',
-                        );
-                      },
+                    Padding(
+                      padding: context.verticalPadding(0.04),
+                      child: Text('SPEARGA',
+                          style: TextStyle(
+                              color: Colors.purple,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold)),
                     ),
-
-                    /// Password
-                    BlocBuilder<AuthBloc, AuthState>(
-                      buildWhen: (prev, curr) =>
-                          prev.password != curr.password ||
-                          prev.showPassword != curr.showPassword,
-                      builder: (context, state) {
-                        debugPrint('PASSWORD');
-                        return TextFormField(
-                          initialValue: state.password,
-                          obscureText: !state.showPassword,
-                          decoration: InputDecoration(
-                              labelText: 'Password',
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  state.showPassword
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                ),
-                                onPressed: () {
-                                  context
+                    Padding(
+                      padding: context.verticalPadding(0.02),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('Login to your account',
+                            style: TextStyle(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16)),
+                      ),
+                    ),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          /// Email
+                          BlocBuilder<AuthBloc, AuthState>(
+                            buildWhen: (prev, curr) => prev.email != curr.email,
+                            builder: (context, state) {
+                              debugPrint('EMAIL');
+                              return CustomEditField(
+                                  hintText: 'Email',
+                                  initialValue: state.email,
+                                  onChanged: (value) => context
                                       .read<AuthBloc>()
-                                      .add(TogglePasswordVisibility());
-                                },
-                              )),
-                          onChanged: (value) => context
-                              .read<AuthBloc>()
-                              .add(PasswordChanged(value)),
-                          validator: (value) =>
-                              value != null && value.length >= 6
-                                  ? null
-                                  : 'Minimum 6 characters',
-                        );
-                      },
-                    ),
+                                      .add(EmailChanged(value)),
+                                  validator: (value) =>
+                                      value != null && value.contains('@')
+                                          ? null
+                                          : 'Enter a valid email');
+                            },
+                          ),
 
-                    SizedBox(height: 20),
+                          /// Password
+                          BlocBuilder<AuthBloc, AuthState>(
+                            buildWhen: (prev, curr) =>
+                                prev.password != curr.password ||
+                                prev.showPassword != curr.showPassword,
+                            builder: (context, state) {
+                              debugPrint('PASSWORD');
+                              return CustomEditField(
+                                  hintText: 'Password',
+                                  initialValue: state.password,
+                                  obscureText: !state.showPassword,
+                                  suffixIcon: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    visualDensity: VisualDensity(
+                                        vertical: -4, horizontal: -4),
+                                    icon: Icon(
+                                      state.showPassword
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      size: 22,
+                                    ),
+                                    onPressed: () {
+                                      context
+                                          .read<AuthBloc>()
+                                          .add(TogglePasswordVisibility());
+                                    },
+                                  ),
+                                  onChanged: (value) => context
+                                      .read<AuthBloc>()
+                                      .add(PasswordChanged(value)),
+                                  validator: (value) =>
+                                      value != null && value.length >= 6
+                                          ? null
+                                          : 'Minimum 6 characters');
+                            },
+                          ),
 
-                    /// Submit button
-                    BlocBuilder<AuthBloc, AuthState>(
-                      buildWhen: (prev, curr) =>
-                          prev.isSubmitting != curr.isSubmitting ||
-                          prev.isValid != curr.isValid,
-                      builder: (context, state) {
-                        return state.isSubmitting
-                            ? CircularProgressIndicator()
-                            : ElevatedButton(
-                                onPressed: state.isValid
-                                    ? () {
-                                        if (_formKey.currentState!.validate()) {
-                                          context
-                                              .read<AuthBloc>()
-                                              .add(LoginSubmitted());
-                                        }
-                                      }
-                                    : null,
-                                child: Text('Login'),
-                              );
-                      },
+                          context.spaceH(0.05),
+
+                          /// Submit button
+                          BlocBuilder<AuthBloc, AuthState>(
+                            buildWhen: (prev, curr) =>
+                                prev.isSubmitting != curr.isSubmitting ||
+                                prev.isValid != curr.isValid,
+                            builder: (context, state) {
+                              return state.isSubmitting
+                                  ? CircularProgressIndicator()
+                                  : SizedBox(
+                                      width: context.screenWidth,
+                                      height: context.screenHeight * 0.08,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.purple,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8))),
+                                        onPressed: state.isValid
+                                            ? () {
+                                                if (_formKey.currentState!
+                                                    .validate()) {
+                                                  context
+                                                      .read<AuthBloc>()
+                                                      .add(LoginSubmitted());
+                                                }
+                                              }
+                                            : null,
+                                        child: Text(
+                                          'Login',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class CustomEditField extends StatelessWidget {
+  final bool obscureText;
+  final String hintText;
+  final String? initialValue;
+  final Function(String)? onChanged;
+  final Widget? suffixIcon;
+  final String? Function(String?)? validator;
+
+  const CustomEditField(
+      {super.key,
+      this.initialValue,
+      this.onChanged,
+      this.validator,
+      this.obscureText = false,
+      required this.hintText,
+      this.suffixIcon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: context.horizontalPadding(0.04),
+      margin: context.verticalMargin(0.015),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: Offset(2, 4))
+          ]),
+      child: TextFormField(
+        initialValue: initialValue,
+        decoration: InputDecoration(
+            suffixIcon: suffixIcon,
+            hintText: hintText,
+            hintStyle: TextStyle(
+                fontSize: 14,
+                color: Colors.black54,
+                fontWeight: FontWeight.w500),
+            border: InputBorder.none),
+        onChanged: onChanged,
+        validator: validator,
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'modules/auth/view/auth_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
     overlays: [
