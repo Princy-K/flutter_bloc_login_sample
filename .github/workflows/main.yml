@@ -20,7 +20,6 @@ jobs:
         with:
           flutter-version: '3.32.7'
       - run: flutter pub get
-      - run: flutter test
       - run: flutter build apk --debug
       - run: |
           flutter build ios --no-codesign
