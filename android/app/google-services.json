@@ -12,7 +12,12 @@
           "package_name": "com.app.firebaseflutterlogin"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "53080012823-hvibb7bhfbdfs3qpi2vbdnrbe9r898nf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAlLExZpB8XAsWapUWyv5WuzVCxN1RPEHs"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "53080012823-hvibb7bhfbdfs3qpi2vbdnrbe9r898nf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     },
@@ -31,7 +41,20 @@
           "package_name": "com.app.flutter_samples"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "53080012823-1lc06kf1jac29bmnpgfmnt9hlfi4vr5c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.flutter_samples",
+            "certificate_hash": "eac6c3272a689b2acbf5f7f81f15d27505224fc0"
+          }
+        },
+        {
+          "client_id": "53080012823-hvibb7bhfbdfs3qpi2vbdnrbe9r898nf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAlLExZpB8XAsWapUWyv5WuzVCxN1RPEHs"
@@ -39,7 +62,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "53080012823-hvibb7bhfbdfs3qpi2vbdnrbe9r898nf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     },
@@ -50,7 +78,12 @@
           "package_name": "com.example.dd"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "53080012823-hvibb7bhfbdfs3qpi2vbdnrbe9r898nf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAlLExZpB8XAsWapUWyv5WuzVCxN1RPEHs"
@@ -58,7 +91,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "53080012823-hvibb7bhfbdfs3qpi2vbdnrbe9r898nf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

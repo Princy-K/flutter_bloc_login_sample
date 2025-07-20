@@ -5,6 +5,7 @@ import 'modules/auth/view/auth_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
     overlays: [
@@ -25,7 +26,6 @@ Future<void> main() async {
       statusBarBrightness: Brightness.light,
       systemNavigationBarDividerColor: Colors.white));
 
-  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
