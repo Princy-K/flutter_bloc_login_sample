@@ -7,6 +7,7 @@ import 'package:flutter_bloc_example/core/extentions/sized_box_extention.dart';
 import 'package:flutter_bloc_example/modules/auth/bloc/auth_bloc.dart';
 
 import '../../../widgets/custom_edit_field.dart';
+import '../../home/view/home_page.dart';
 
 class AuthPage extends StatelessWidget {
   AuthPage({super.key});
@@ -31,6 +32,10 @@ class AuthPage extends StatelessWidget {
               if (state.isSuccess) {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text('Login Success')));
+
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) => HomePage()));
+
                 context.read<AuthBloc>().add(ResetAuth());
               } else if (state.errorMessage != null) {
                 ScaffoldMessenger.of(context)
