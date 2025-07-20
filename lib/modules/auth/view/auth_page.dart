@@ -6,6 +6,8 @@ import 'package:flutter_bloc_example/core/extentions/padding_extention.dart';
 import 'package:flutter_bloc_example/core/extentions/sized_box_extention.dart';
 import 'package:flutter_bloc_example/modules/auth/bloc/auth_bloc.dart';
 
+import '../../../widgets/custom_edit_field.dart';
+
 class AuthPage extends StatelessWidget {
   AuthPage({super.key});
 
@@ -42,11 +44,12 @@ class AuthPage extends StatelessWidget {
               debugPrint('BUILDER');
               return Padding(
                 padding: context.paddingAllResponsive(0.08),
-                child: Column(
+                child: ListView(
                   children: [
                     Padding(
                       padding: context.verticalPadding(0.04),
                       child: Text('SPEARGA',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                               color: Colors.purple,
                               fontSize: 20,
@@ -78,10 +81,19 @@ class AuthPage extends StatelessWidget {
                                   onChanged: (value) => context
                                       .read<AuthBloc>()
                                       .add(EmailChanged(value)),
-                                  validator: (value) =>
-                                      value != null && value.contains('@')
-                                          ? null
-                                          : 'Enter a valid email');
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Email is required';
+                                    }
+                                    final emailRegex = RegExp(
+                                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+                                    if (!emailRegex.hasMatch(value.trim())) {
+                                      return 'Enter a valid email';
+                                    }
+
+                                    return null;
+                                  });
                             },
                           ),
 
@@ -141,16 +153,14 @@ class AuthPage extends StatelessWidget {
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(8))),
-                                        onPressed: state.isValid
-                                            ? () {
-                                                if (_formKey.currentState!
-                                                    .validate()) {
-                                                  context
-                                                      .read<AuthBloc>()
-                                                      .add(LoginSubmitted());
-                                                }
-                                              }
-                                            : null,
+                                        onPressed: () {
+                                          if (_formKey.currentState!
+                                              .validate()) {
+                                            context
+                                                .read<AuthBloc>()
+                                                .add(LoginSubmitted());
+                                          }
+                                        },
                                         child: Text(
                                           'Login',
                                           style: TextStyle(color: Colors.white),
@@ -168,54 +178,6 @@ class AuthPage extends StatelessWidget {
             },
           ),
         ),
-      ),
-    );
-  }
-}
-
-class CustomEditField extends StatelessWidget {
-  final bool obscureText;
-  final String hintText;
-  final String? initialValue;
-  final Function(String)? onChanged;
-  final Widget? suffixIcon;
-  final String? Function(String?)? validator;
-
-  const CustomEditField(
-      {super.key,
-      this.initialValue,
-      this.onChanged,
-      this.validator,
-      this.obscureText = false,
-      required this.hintText,
-      this.suffixIcon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: context.horizontalPadding(0.04),
-      margin: context.verticalMargin(0.015),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: Offset(2, 4))
-          ]),
-      child: TextFormField(
-        initialValue: initialValue,
-        decoration: InputDecoration(
-            suffixIcon: suffixIcon,
-            hintText: hintText,
-            hintStyle: TextStyle(
-                fontSize: 14,
-                color: Colors.black54,
-                fontWeight: FontWeight.w500),
-            border: InputBorder.none),
-        onChanged: onChanged,
-        validator: validator,
       ),
     );
   }

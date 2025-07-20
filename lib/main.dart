@@ -1,8 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'modules/auth/view/auth_page.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.manual,
@@ -24,6 +25,7 @@ void main() {
       statusBarBrightness: Brightness.light,
       systemNavigationBarDividerColor: Colors.white));
 
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
